@@ -96,6 +96,22 @@ Benefits:
 * Easy integration with CI/CD pipelines
 * Improves security and flexibility
 
+
+# parallel execution for multiple users cross-browser
+* Moved user credentials to .env.users.qa
+```
+USER_1_USERNAME=replace_user1_username
+USER_1_PASSWORD=replace_user1_pwd
+
+USER_2_USERNAME=replace_user2_username
+USER_2_PASSWORD=replace_user2_pwd
+```
+* Run tests in parallel
+```
+npx playwright test
+npx playwright test --project=user1-chromium
+```
+
 ---
 
 ## Summary

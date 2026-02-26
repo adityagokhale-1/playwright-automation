@@ -8,7 +8,58 @@ import path from 'path';
 dotenv.config({ path: `.env.${process.env.ENV || 'qa'}` });
 dotenv.config({ path: `.env.users.${process.env.ENV || 'qa'}` });
 
+// dynamically find users
+function getUserIndices(): number[] {
 
+  const userIndices: number[] = [];
+
+  Object.keys(process.env).forEach(key => {
+
+    const match = key.match(/^USER_(\d+)_USERNAME$/);
+
+    if (match) {
+      userIndices.push(Number(match[1]));
+    }
+
+  });
+
+  const sorted = userIndices.sort((a, b) => a - b);
+
+  // log only once
+  if (!process.env.PW_WORKER_INDEX) {
+    console.log("Detected users:", sorted);
+  }
+
+  return sorted;
+}
+
+const users = getUserIndices();
+
+// console.log("Detected users:", users);
+
+// browsers
+const browsers = [
+  { name: 'chromium', use: devices['Desktop Chrome'] },
+  { name: 'firefox', use: devices['Desktop Firefox'] },
+  { name: 'webkit', use: devices['Desktop Safari'] },
+];
+
+// generate projects dynamically
+const projects = users.flatMap(userIndex =>
+  browsers.map(browser => ({
+    name: `user${userIndex}-${browser.name}`,
+
+    use: {
+      ...browser.use,
+      baseURL: process.env.BASE_URL,
+    },
+
+    metadata: {
+      userIndex,
+    },
+
+  }))
+);
 
 // console.log('Loading env file:', path);
 
@@ -56,42 +107,7 @@ export default defineConfig({
   },
 
   /* Configure projects for major browsers */
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
-  ],
+  projects,
 
   /* Run your local dev server before starting the tests */
   // webServer: {
