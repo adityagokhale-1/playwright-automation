@@ -72,6 +72,23 @@ npm install dotenv
 
 **Added support for `.env` files for local testing:**
 
+Format:
+```
+BASE_URL=replace_this_with_base_url_for_env
+USERNAME=replace_with_user_for_env
+PASSWORD=replace_with_password_for_env
+```
+
+Command to run all tests by environment:
+* Create .env.qa as default env file and run tests in qa env using
+```
+npx playwright test
+```
+* To use other environment e.g. "staging" create ".env.staging" and run below command
+```
+TEST_ENV=staging npx playwright test
+```
+
 Benefits:
 
 * Environment-based configuration
