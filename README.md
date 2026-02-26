@@ -14,4 +14,14 @@ Language Choses: TypeScript
     * Huge Community support and ecosystem
 
 Run Playwrite tests:
-    * npm playwright test
+    * npm playwright test (by default runs in headless mode)
+
+Refactor generated project to open test site:
+    * Good article for freely available test sites https://www.linkedin.com/pulse/best-test-demo-sites-practicing-software-automation-mark-nicoll-bjsme
+    * Chose https://www.saucedemo.com for e2e testing demo
+
+Support running againsts different env:
+    * npm install dotenv
+    * added support for .env files for local testing
+        * env-based config + no hardcoded credentials
+        * ready to integrate with CI/CD
