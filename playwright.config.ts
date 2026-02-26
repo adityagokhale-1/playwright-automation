@@ -2,17 +2,22 @@ import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
 import path from 'path';
 
-const testEnv = process.env.TEST_ENV || 'qa';
-const envPath = path.resolve(__dirname, `.env.${testEnv}`);
+// const testEnv = process.env.TEST_ENV || 'qa';
+// const envPath = path.resolve(__dirname, `.env.${testEnv}`);
+// load env files
+dotenv.config({ path: `.env.${process.env.ENV || 'qa'}` });
+dotenv.config({ path: `.env.users.${process.env.ENV || 'qa'}` });
 
-console.log('Loading env file:', envPath);
 
-dotenv.config({
-  path: envPath,
-  quiet: true,
-});
 
-console.log('BASE_URL after dotenv:', process.env.BASE_URL);
+// console.log('Loading env file:', path);
+
+// dotenv.config({
+//   path: envPath,
+//   quiet: true,
+// });
+
+// console.log('BASE_URL after dotenv:', process.env.BASE_URL);
 
 /**
  * Read environment variables from file.
@@ -34,7 +39,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 1 : 4,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -43,7 +48,7 @@ export default defineConfig({
     // baseURL: 'http://localhost:3000',
     baseURL: process.env.BASE_URL,
 
-    headless: false,
+    headless: true,
 
     screenshot: 'only-on-failure',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */

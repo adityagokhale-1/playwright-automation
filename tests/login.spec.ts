@@ -1,12 +1,12 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures/userFixture';
 
-test('QA user can login to SauceDemo', async ({ page }) => {
+test('Verify valid users can login', async ({ page, user }) => {
     // Go to baseURL (from config)
     await page.goto('/');
 
     // Use env variables (NOT hardcoded)
-    await page.locator('#user-name').fill(process.env.USERNAME!);
-    await page.locator('#password').fill(process.env.PASSWORD!);
+    await page.locator('#user-name').fill(user.username);
+    await page.locator('#password').fill(user.password);
 
     await page.locator('#login-button').click();
 
